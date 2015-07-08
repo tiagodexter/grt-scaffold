@@ -1,0 +1,17 @@
+Usage: grt-scaffold [options] [option value] type
+Attention: Remeber to enable the Bootstrap in your layout
+
+Options:
+       --version       Display the current version.
+   -h, --help          Display help and usage details.
+   -t  --type	       View type of Bootstrap
+   -c  --controller    Generate Controller
+   -v  --view	       Generate View
+   -a  --all	       Generate all
+   -f  --file          File to read
+   -d  --dest	       Parameter to destination dir ( colon [view|controller] ) Ex: Controller,View
+
+Option Value:
+   -t:
+       (google|twitter)
+
