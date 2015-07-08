@@ -32,8 +32,19 @@ function sksort(array, key) {
 	});
 }
 
-function generateView(model, modelName, dirView) {
-	console.log('View');
+function generateView(model, modelName, dirView, callback) {	
+	fs.exists(dirView+'/'+modelName.toLowerCase(), function(exists) {
+	    if (!exists) {
+	       	fs.mkdir(dirView+'/'+modelName.toLowerCase(), function(error) {
+				 if(error){
+				 	console.log('Failed to create Directory' + dirView+'/'+modelName.toLowerCase());
+				 }else{
+				 	console.log('Directory '+dirView+'/'+modelName.toLowerCase()+' successfuly created');
+				 }
+			});
+	    }
+	    callback(modelName);    	    	    	   
+	});				
 }
 
 function generateController(model, modelName, callback) {
@@ -103,7 +114,17 @@ stdin(function(data) {
 			}
 
 			if (args.a || args.all) {
-				generateView(model,modelName, dirView);
+
+				generateView(model, modelName, dirView, function(data) {
+					fs.writeFile(dirView+'/'+modelName.toLowerCase()+'/'+'index.ejs',"teste",function(err) {
+						if (!err) {
+							console.log('File '+dirView+'/'+modelName.toLowerCase()+'/'+'index.ejs successfuly created');
+						} else {
+							console.error('Error when create view file '+dirView+'/'+modelName.toLowerCase()+'/'+'index.ejs');
+							console.error(err);
+						}
+					});						
+				});
 
 				generateController(model,modelName, function(data) {
 					fs.writeFile(dirController+'/'+modelName+'Controller.js',data,function(err) {
@@ -114,9 +135,19 @@ stdin(function(data) {
 						}
 					});
 				});
+
 			} else {
 				if (args.v || args.view) {
-					generateView(model, modelName, dirView);
+					generateView(model, modelName, dirView, function(data) {
+						fs.writeFile(dirView+'/'+modelName.toLowerCase()+'/'+'index.ejs',"teste",function(err) {
+							if (!err) {
+								console.log('File '+dirView+'/'+modelName.toLowerCase()+'/'+'index.ejs successfuly created');
+							} else {
+								console.error('Error when create view file '+dirView+'/'+modelName.toLowerCase()+'/'+'index.ejs');
+								console.error(err);
+							}
+						});						
+					});
 				} else {
 					console.error('You cannot use this option with -t option');	
 				}
