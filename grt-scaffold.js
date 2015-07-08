@@ -32,11 +32,11 @@ function sksort(array, key) {
 	});
 }
 
-function generateView(model,modelName) {
+function generateView(model, modelName, dirView) {
 	console.log('View');
 }
 
-function generateController(model,modelName,callback) {
+function generateController(model, modelName, callback) {
 	var content = fs.readFile('samples/controller.js','utf-8',function(err,data) {
 		data = data.replace('{CONTROLLER}',modelName.toLowerCase()+"Controller").replace(new RegExp('{MODEL}','g'),modelName);
 		var fields = "";
@@ -103,7 +103,8 @@ stdin(function(data) {
 			}
 
 			if (args.a || args.all) {
-				generateView(model,modelName);
+				generateView(model,modelName, dirView);
+
 				generateController(model,modelName, function(data) {
 					fs.writeFile(dirController+'/'+modelName+'Controller.js',data,function(err) {
 						if (!err) {
@@ -115,7 +116,7 @@ stdin(function(data) {
 				});
 			} else {
 				if (args.v || args.view) {
-					generateView(model,modelName);
+					generateView(model, modelName, dirView);
 				} else {
 					console.error('You cannot use this option with -t option');	
 				}
@@ -123,7 +124,15 @@ stdin(function(data) {
 
 		} else {
 			if (args.c || args.controller) {
-				generateController(model,modelName);
+				generateController(model,modelName, function(data) {
+					fs.writeFile(dirController+'/'+modelName+'Controller.js',data,function(err) {
+						if (!err) {
+							console.log('File '+dirController+'/'+modelName+'Controller.js successfuly created');
+						} else {
+							console.error('Error when create controller file');
+						}
+					});
+				});
 			} else {
 				console.error("You need to set an option");
 			}
